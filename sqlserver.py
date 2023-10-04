@@ -4,6 +4,7 @@ import os
 
 scala_version = '2.12'
 spark_version = pyspark.__version__
+sql_driver_jar = "C:/Users/Admin/Downloads/sqljdbc_12.4.1.0_enu/sqljdbc_12.4/enu/jars/mssql-jdbc-12.4.0.jre11.jar"
 
 def configure_spark():
     existing_spark = SparkSession.builder.getOrCreate()
@@ -20,7 +21,8 @@ def configure_spark():
     spark = SparkSession.builder \
         .appName("SQLServerToKafka") \
         .config("spark.driver.memory", "4g") \
-        .config("spark.executor.memory", "4g").getOrCreate()
+        .config("spark.executor.memory", "4g")\
+        .config("spark.driver.extraClassPath", sql_driver_jar) .config("spark.executor.extraClassPath", sql_driver_jar).getOrCreate()
 
     return spark
 
@@ -29,7 +31,8 @@ def read_data_from_sql_server(spark, jdbc_url, user, password, table_name):
         "user": user,
         "password": password,
         "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-        "encrypt": "false"
+        "encrypt": "false",
+        "integratedSecurity":"True"
     }
 
     sql_df = spark.read.jdbc(url=jdbc_url, table=table_name, properties=properties, numPartitions=5)

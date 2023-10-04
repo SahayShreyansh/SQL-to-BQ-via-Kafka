@@ -4,10 +4,10 @@ from Kafkaserver import publish_to_kafka
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="SQL to Kafka Data Pipeline")
-    parser.add_argument("--jdbc_url", required=True, help="JDBC URL for SQL Server") #jdbc:sqlserver://localhost:1433;databaseName=prac;
+    parser.add_argument("--jdbc_url", required=True, help="JDBC URL for SQL Server") #jdbc:sqlserver://localhost:1433;databaseName=initial;
     parser.add_argument("--user", required=True, help="SQL Server username")
     parser.add_argument("--password", required=False, default="", help="SQL Server password")
-    parser.add_argument("--table_name", required=True, help="Name of the table to read from")
+    parser.add_argument("--table_name", required=True, help="Name of the table to read from")#start
 
     parser.add_argument("--kafka_bootstrap_servers", required=True, help="Kafka bootstrap servers")
     parser.add_argument("--kafka_topic", required=True, help="Kafka topic to write data to")
