@@ -1,4 +1,5 @@
-from confluent_kafka import Producer
+from confluent_kafka import Producer, Consumer
+
 
 def transform_data_for_kafka(sql_df, key_column, value_column):
     kafka_df = sql_df.selectExpr(f"CAST({key_column} AS STRING) AS key", f"to_json(struct({value_column})) AS value")
@@ -26,3 +27,11 @@ def publish_to_kafka(sql_df, kafka_bootstrap_servers, topic, key_column, value_c
         key = row.key
         value = row.value
         publish_message(producer, topic, key, value)
+
+def create_kafka_consumer(kafka_bootstrap_servers, kafka_topic, group_id):
+    conf = {
+        "bootstrap.servers": kafka_bootstrap_servers,
+        "group.id": group_id,
+        "auto.offset.reset": "earliest",
+    }
+    return Consumer(conf)
